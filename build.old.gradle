@@ -1,0 +1,240 @@
+buildscript {
+    repositories {
+        maven { 
+            // url = 'https://maven.cleanroommc.com'
+            url = 'https://maven.minecraftforge.net'
+        }
+        maven { 
+            url = 'https://repo.spongepowered.org/maven' 
+        }
+	mavenCentral()
+    }
+    dependencies {
+        classpath 'com.anatawa12.forge:ForgeGradle:2.3-1.0.7'
+        if (project.use_mixins.toBoolean()) {
+            classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        }
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+if (project.use_mixins.toBoolean()) {
+    apply plugin: 'org.spongepowered.mixin'
+}
+
+version = project.mod_version
+group = project.maven_group
+archivesBaseName = project.archives_base_name
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+configurations {
+    embed
+    implementation.extendsFrom(embed)
+}
+
+minecraft {
+    version = '1.12.2-14.23.5.2847'
+    runDir = 'run'
+    mappings = 'stable_39'
+    def args = []
+    if (project.use_coremod.toBoolean()) {
+        args << '-Dfml.coreMods.load=' + coremod_plugin_class_name
+    }
+    if (project.use_mixins.toBoolean()) {
+        args << '-Dmixin.hotSwap=true'
+        args << '-Dmixin.checks.interfaces=true'
+        args << '-Dmixin.debug.export=true'
+    }
+    useDepAts = true
+    clientJvmArgs.addAll(args)
+    serverJvmArgs.addAll(args)
+}
+
+repositories {
+    maven { 
+        url = 'https://maven.cleanroommc.com' 
+    }
+    maven {
+        url = 'https://repo.spongepowered.org/maven'
+    }
+    maven {
+        url 'https://cursemaven.com'
+    }
+    maven {
+        url 'https://maven.blamejared.com/'
+    }
+    maven {
+        url 'https://friendlyhj.github.io/maven'
+    }
+    maven {
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url "https://maven.blamejared.com"
+    }
+    maven {
+        url "https://maven.covers1624.net/"
+    }
+    maven {
+        url "https://chickenbones.net/maven/"
+    }
+    maven {
+        url "https://www.ryanliptak.com/maven/"
+    }
+    maven {
+        url "https://maven.ellpeck.de/"
+    }
+    maven {
+        url "https://maven2.ic2.player.to/"
+    }
+    maven {
+        url "https://maven.tterrag.com"
+    }
+    maven {
+        url "https://maven.thiakil.com"
+    }
+    maven {
+        url "https://maven.amadornes.com/"
+    }
+    maven {
+        url "https://www.cursemaven.com"
+    }
+}
+
+dependencies {
+
+    if (project.use_assetmover.toBoolean()) {
+        compile 'com.cleanroommc:assetmover:2.0'
+    }
+    if (project.use_mixins.toBoolean()) {
+        compile 'zone.rong:mixinbooter:9.1'
+    }
+    deobfCompile ('CraftTweaker2:CraftTweaker2-MC1120-Mod-JEI:1.12-4.+') {
+        exclude group: 'deobf.mezz.jei'
+    }
+    deobfCompile 'curse.maven:zenutil-401178:5078035-sources-5078037'
+//    deobfCompile 'curse.maven:had-enough-items-557549:4451828'
+    deobfCompile 'mezz.jei:jei_1.12.2:4.16.1.302'
+
+    deobfCompile 'curse.maven:ModTweaker-220954:3840577'
+    deobfCompile "curse.maven:mtlib-253211:3308160"
+    deobfCompile("cofh:RedstoneFlux:1.12-2.1.0.7:universal") {
+        exclude group: 'mezz.jei'
+    }
+
+    compileOnly "vazkii.botania:Botania:r1.10-363.148"
+    compileOnly "com.azanor.baubles:Baubles:1.12-1.5.2"
+
+    // From ModTweaker
+    compileOnly("cofh:ThermalExpansion:1.12.2-5.5.4.43:universal") {
+        exclude group: 'mezz.jei'
+    }
+    compileOnly("cofh:ThermalFoundation:1.12.2-2.6.3.27:universal") {
+        exclude group: 'mezz.jei'
+    }
+
+    compileOnly("cofh:CoFHCore:1.12.2-4.6.3.27:universal") {
+        exclude group: 'mezz.jei'
+    }
+
+    compileOnly("cofh:CoFHWorld:1.12.2-1.3.1.7:universal") {
+        exclude group: 'mezz.jei'
+    }
+
+
+    compileOnly("codechicken:CodeChickenLib:1.12.2-3.2.3.358:universal") {
+        exclude group: 'mezz.jei'
+    }
+
+//    deobfCompile("betterwithmods:BetterWithMods:1.12-2.3.24-1068") {
+//        exclude group: 'mezz.jei'
+//    }
+    compileOnly("curse.maven:actually-additions-228404:3117927") {
+        exclude group: 'mezz.jei'
+    }
+    compileOnly("slimeknights.mantle:Mantle:1.12-1.3.3.+") {
+        exclude group: 'mezz.jei'
+    }
+    compileOnly("slimeknights:TConstruct:1.12.2-2.12.0.+") {
+        exclude group: 'mezz.jei'
+    }
+    compileOnly('net.sengir.forestry:forestry_1.12.2:5.+') {
+        exclude group: 'mezz.jei'
+    }
+    compileOnly "team.chisel.ctm:CTM:MC1.12.2-1.0.2.31"
+//    deobfCompile("knightminer.tcomplement:TinkersComplement:1.12.2-0.4.2.39") {
+//        exclude group: 'mezz.jei'
+//    }
+    compileOnly "team.chisel:Chisel:MC1.12.2-1.0.2.45"
+    compileOnly "curse.maven:bloodmagic-224791:2610083"
+    compileOnly "curse.maven:guideapi-228832:2645992"
+    compileOnly("knightminer:Inspirations:1.12.2-0.2.9.9") {
+        exclude group: 'mezz.jei'
+    }
+    compileOnly "blusunrize:ImmersiveEngineering:0.12-92-559"
+    // End From ModTweaker
+
+    compileOnly "curse.maven:avaritia-261348:3143349"
+    compileOnly "curse.maven:gregtech-ce-unofficial-557242:5322654"
+    compileOnly "curse.maven:extended-crafting-nomifactory-edition-398267:4592627"
+    compileOnly "curse.maven:cucumber-272335:2645867"
+    compileOnly "curse.maven:artisan-worktables-284351:3205284"
+    compileOnly "curse.maven:athenaeum-284350:4633750"
+    compileOnly "curse.maven:dropt-284973:3758733"
+    compileOnly "vazkii.patchouli:Patchouli:1.0-23.6"
+    compileOnly "curse.maven:mekanism-268560:2835175"
+    compileOnly "curse.maven:pneumaticcraft-repressurized-281849:2978408"
+    compileOnly "curse.maven:inworldcrafting-311938:2683267"
+    compileOnly "curse.maven:embers-extended-life-936489:5321973"
+}
+
+sourceSets {
+
+    main {
+        ext.refMap = 'mixins.' + archives_base_name + '.refmap.json'
+    }
+
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+    
+    if (project.use_access_transformer.toBoolean()) {
+        rename '(.+_at.cfg)', 'META-INF/$1' // Access Transformers
+    }
+}
+
+jar {
+    manifest {
+        def attribute_map = [:]
+        if (project.use_coremod.toBoolean()) {
+            attribute_map['FMLCorePlugin'] = project.coremod_plugin_class_name
+            if (project.include_mod.toBoolean()) {
+                attribute_map['FMLCorePluginContainsFMLMod'] = true
+                attribute_map['ForceLoadAsMod'] = project.gradle.startParameter.taskNames[0] == "build"
+            }
+        }
+		if (project.use_access_transformer.toBoolean()) {
+            attribute_map['FMLAT'] = project.archives_base_name + '_at.cfg'
+        }
+        attributes(attribute_map)
+    }
+}

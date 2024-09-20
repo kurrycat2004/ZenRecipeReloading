@@ -1,0 +1,100 @@
+//file:noinspection DependencyNotationArgument
+// TODO remove when fixed in RFG ^
+/*
+ * Add your dependencies here. Supported configurations:
+ *  - api("group:name:version:classifier"): if you use the types from this dependency in the public API of this mod
+ *       Available at runtime and compiletime for mods depending on this mod
+ *  - implementation("g:n:v:c"): if you need this for internal implementation details of the mod, but none of it is visible via the public API
+ *       Available at runtime but not compiletime for mods depending on this mod
+ *  - compileOnly("g:n:v:c"): if the mod you're building doesn't need this dependency during runtime at all, e.g. for optional mods
+ *       Not available at all for mods depending on this mod, only visible at compiletime for this mod
+ *  - compileOnlyApi("g:n:v:c"): like compileOnly, but also visible at compiletime for mods depending on this mod
+ *       Available at compiletime but not runtime for mods depending on this mod
+ *  - runtimeOnlyNonPublishable("g:n:v:c"): if you want to include a mod in this mod's runClient/runServer runs, but not publish it as a dependency
+ *       Not available at all for mods depending on this mod, only visible at runtime for this mod
+ *  - devOnlyNonPublishable("g:n:v:c"): a combination of runtimeOnlyNonPublishable and compileOnly for dependencies present at both compiletime and runtime,
+ *       but not published as Maven dependencies - useful for RFG-deobfuscated dependencies or local testing
+ *  - runtimeOnly("g:n:v:c"): if you don't need this at compile time, but want it to be present at runtime
+ *       Available at runtime for mods depending on this mod
+ *  - annotationProcessor("g:n:v:c"): mostly for java compiler plugins, if you know you need this, use it, otherwise don't worry
+ *  - testCONFIG("g:n:v:c") - replace CONFIG by one of the above (except api), same as above but for the test sources instead of main
+ *
+ *  - shadowImplementation("g:n:v:c"): effectively the same as API, but the dependency is included in your jar under a renamed package name
+ *       Requires you to enable usesShadowedDependencies in gradle.properties
+ *       For more info, see https://github.com/GregTechCEu/Buildscripts/blob/master/docs/shadow.md
+ *
+ * You can exclude transitive dependencies (dependencies of the chosen dependency) by appending { transitive = false } if needed,
+ * but use this sparingly as it can break using your mod as another mod's dependency if you're not careful.
+ *
+ * To depend on obfuscated jars you can use `devOnlyNonPublishable(rfg.deobf("dep:spec:1.2.3"))` to fetch an obfuscated jar from maven,
+ * or `devOnlyNonPublishable(rfg.deobf(project.files("libs/my-mod-jar.jar")))` to use a file.
+ *
+ * To add a mod with CurseMaven, replace '("g:n:v:c")' in the above with 'rfg.deobf("curse.maven:project_slug-project_id:file_id")'
+ * Example: devOnlyNonPublishable(rfg.deobf("curse.maven:top-245211:2667280"))
+ *
+ * Gradle names for some of the configuration can be misleading, compileOnlyApi and runtimeOnly both get published as dependencies in Maven, but compileOnly does not.
+ * The buildscript adds runtimeOnlyNonPublishable to also have a runtime dependency that's not published.
+ *
+ * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
+ */
+//file:noinspection GroovyAssignabilityCheck
+dependencies {
+    implementation ('CraftTweaker2:CraftTweaker2-MC1120-Mod-JEI:1.12-4.+') {
+        exclude group: 'deobf.mezz.jei'
+    }
+
+    var requiredDependencies = [
+            // cursemaven doesnt like what crafttweaker is doing with multiple jars in one
+            //"curse.maven:crafttweaker2-239197:5486112",
+            "curse.maven:zenutil-401178:5078035-sources-5078037",
+            "curse.maven:modtweaker-220954:3840577",
+            "curse.maven:mtlib-253211:3308160"
+    ]
+
+    var optionalDependencies = [
+            "curse.maven:botania-225643:3330934",
+            "curse.maven:baubles-227083:2518667",
+            "curse.maven:redstone-flux-270789:2920436",
+
+            // From ModTweaker
+            "curse.maven:thermalexpansion-69163:2926431",
+            "curse.maven:thermalfoundation-222880:2926428",
+            "curse.maven:cofhcore-69162:2920433",
+            "curse.maven:cofhworld-271384:2920434",
+            "curse.maven:codechickenlib-242818:2779848",
+            //"curse.maven:betterwithmods-246760:5702821",
+            "curse.maven:actually-additions-228404:3117927",
+            "curse.maven:mantle-74924:2713386",
+            "curse.maven:tconstruct-74072:2902483",
+            "curse.maven:forestry-59751:2918418",
+            "curse.maven:ctm-267602:2915363",
+            "curse.maven:chisel-235279:2915375",
+            //"curse.maven:tinkers-complement-272671:2843439",
+            "curse.maven:bloodmagic-224791:2610083",
+            "curse.maven:guideapi-228832:2645992",
+            "curse.maven:inspirations-284007:2843007",
+            "curse.maven:immersive-engineering-231951:2974106",
+            // End From ModTweaker
+
+            "curse.maven:avaritia-261348:3143349",
+            "curse.maven:gregtech-ce-unofficial-557242:5322654",
+            "curse.maven:extended-crafting-nomifactory-edition-398267:4592627",
+            "curse.maven:cucumber-272335:2645867",
+            "curse.maven:artisan-worktables-284351:3205284",
+            "curse.maven:athenaeum-284350:4633750",
+            "curse.maven:dropt-284973:3758733",
+            "vazkii.patchouli:Patchouli:1.0-23.6",
+            "curse.maven:mekanism-268560:2835175",
+            "curse.maven:pneumaticcraft-repressurized-281849:2978408",
+            "curse.maven:inworldcrafting-311938:2683267",
+            "curse.maven:embers-extended-life-936489:5321973"
+    ]
+
+    for (dependency in requiredDependencies) {
+        implementation rfg.deobf(dependency)
+    }
+
+    for (dependency in optionalDependencies) {
+        compileOnly rfg.deobf(dependency)
+    }
+}
